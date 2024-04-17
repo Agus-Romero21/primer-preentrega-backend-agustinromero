@@ -1,6 +1,6 @@
 import express from 'express'
-import productsRouter from './routes/product.router.js'
-import cartRouter from './routes/cart.router.js'
+import productsRouter from './src/routes/product.router.js'
+import cartRouter from './src/routes/cart.router.js'
 import { __dirname } from './utils.js'
 
 const app = express()
