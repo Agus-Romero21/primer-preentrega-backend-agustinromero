@@ -68,7 +68,7 @@ export default class ProductsManager{
 
             if (!product) return 'no esta el producto soilicitado'
 
-            product.push(productsDB)
+            productsDB.push(product)
             await fs.promises.appendFile(this.path, JSON.stringify(productsDB, {id: parseInt(uid), ...userToUpdate} , '\t'), 'utf-8') 
             console.log("corregimos el elemento")
             return console.log(product)
@@ -81,13 +81,14 @@ export default class ProductsManager{
     deleteProduct = async (pid) => {
         try{
             const productsDB = await this.readFile()
-            const product = productsDB.filter(productsDB => productsDB.id !== pid)
+            const product = productsDB.filter(prod => prod.id !== pid)
             
             console.log (product)
 
             if (!product) return 'no esta el producto soilicitado'
 
             await fs.promises.writeFile(this.path,JSON.stringify(product, null , '\t'),'utf-8')
+            return product
         } catch (error){
             return console.log(error)
         }

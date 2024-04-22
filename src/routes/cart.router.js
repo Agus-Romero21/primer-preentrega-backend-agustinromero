@@ -41,6 +41,7 @@ router.get('/:cid', async (req, res)=> {
     const cartFound = await carts.getCartById(parseInt(cid))
     if(cartFound) return res.send(cartFound) 
 
+    re.json('No se encontro el carrito')
      return console.log('el carrito no fue encontrado')
 })
 //---------------------------------------------------------------

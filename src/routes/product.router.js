@@ -66,10 +66,10 @@ router.put('/:pid', (req, res)=> {
 
 router.delete('/:pid', (req, res)=> {
     const { pid } = req.params 
-    const usersResult = users.filter(user => user.id !== parseInt(pid))
-    users = usersResult
+    const productResult = products.deleteProduct(parseInt(pid))
 
-    res.send({status: 'success', payload: usersResult})
+
+    res.send({status: 'success', payload: productResult})
 
 })
 
