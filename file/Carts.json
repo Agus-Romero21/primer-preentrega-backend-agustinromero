@@ -1,7 +1,15 @@
 [
 	{
 		"id": 1,
-		"product": [
+		"products": []
+	},
+	{
+		"id": 2,
+		"products": [
+			{
+				"productID": 1,
+				"quantity": 1
+			},
 			{
 				"productID": 1,
 				"quantity": 1
@@ -9,7 +17,15 @@
 		]
 	},
 	{
-		"id": 2,
-		"product": []
+		"id": 3,
+		"products": []
+	},
+	{
+		"id": 4,
+		"products": []
+	},
+	{
+		"id": 5,
+		"products": []
 	}
 ]

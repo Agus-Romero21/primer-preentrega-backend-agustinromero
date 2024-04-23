@@ -3,35 +3,32 @@ import fs from 'fs'
 export default class CartManager{
     constructor (path){
         this.path = path
+        this.carts = []
+        this.readFile()
     }
 
 
 readFile = async () => {
     try{
         const dataJson = await fs.promises.readFile(this.path, 'utf-8')
-        return JSON.parse(dataJson)
+        this.carts = JSON.parse(dataJson)
+        return this.carts
     } catch (error){
-        return []
+        await fs.promises.writeFile(this.path, JSON.stringify(this.carts, null, '\t'), 'utf-8')
     }
 }
 
 addCart = async (cart) => {
     try{
-        const cartsDB = await this.readFile()
-
-        //asignar Id
-        if(cartsDB.length === 0){
-            cart.id= 1
-        } else {
-            cart.id = cartsDB[cartsDB.length -1]. id + 1
+        if(this.carts.length === 0) {
+            cart.id = 1
+        } else{
+            cart.id = this.carts [this.carts.length - 1].id + 1
         }
 
-        cartsDB.push(cart)
-            await fs.promises.writeFile(this.path, JSON.stringify(cartsDB, null, '\t'),'utf-8')
-            //agregar el producto
-            return cartsDB
-        
-
+        this.carts.push(cart)
+        await fs.promises.writeFile(this.path, JSON.stringify(this.carts, null, '\t'), 'utf-8')
+        return this.carts
     } catch(error){
         console.log (error)
     }
@@ -39,7 +36,7 @@ addCart = async (cart) => {
 //-----------------------------------------------------------------------
 getCarts = async () => {
     try{
-        return await this.readFile()
+        return this.carts
     } catch (error){
         console.log(error)
     }
@@ -47,7 +44,7 @@ getCarts = async () => {
 //-----------------------------------------------------------------------
 getCartById = async (cid) => {
     try{
-        const cartsDB = await this.readFile()
+        const cartsDB = this.carts
         const cart = cartsDB.find(cart => cart.id === cid)
 
         if (!cart) return 'no esta el carrito soilicitado'
@@ -59,44 +56,22 @@ getCartById = async (cid) => {
     }
 }
 //-----------------------------------------------------------------------
-addProductToCart = async (cid, pid) => {
+addProductToCart = async (cid, pid, prod) => {
     try{
-        const cartsDB = await this.readFile()
-        const cart = cartsDB.find(cart => cart.id === cid)
+        const cartsDB = this.carts
+        let cart = cartsDB.find(cart => cart.id === cid)
 
         //asignar quantity
-        if(cart.product.productID !== pid ){
-            cart.product.push({id: cid, quantity: 1})
-                await fs.promises.writeFile(this.path,JSON.stringify(cart, null, '\t'), 'utf-8')
+        if(cart.productID !== parseInt(pid)){
+            cart.products.push(prod)
         } else {
-             cart.product.push( {productID: cart.id, quantity:cart.quantity ++} )
-            await fs.promises.writeFile(this.path,JSON.stringify(cart, null, '\t'), 'utf-8')
+            const newCart = cart.product.quantity ++
+            cart= newCart
+            this.carts.push(cart)
         }
-
-        // cart.prod.push({id: cid, quantity: 1})
-        //         await fs.promises.writeFile(this.path,JSON.stringify(cartId, null, '\t'), 'utf-8')
-            //agregar el producto
-            return cart
-
-
-
-
-
-        // const cartsDB = await this.readFile()
-        // const cartId = cartsDB.find(cart => cart.id === cid)
-        // console.log(cartId)
         
-        // if(cartId){
-        //     prod = cartId.procutc.find(prod == prod.id === pid)
-        //     caonsole.log(prod)
-            
-        //     if(prod){
-        //         prod.quantity += quantity
-        //     } else{
-        //         cartId.prod.push({id: cid, quantity: 1})
-        //         await fs.promises.writeFile(this.path,JSON.stringify(cartId, null, '\t'), 'utf-8')
-        //     }   return cartId
-        // } console.log('no encontre el carrito solicitado')
+        await fs.promises.writeFile(this.path, JSON.stringify(this.carts, null, '\t'), 'utf-8')
+        return this.carts
         
     } catch (error){
         return console.log('el error es ' + error)

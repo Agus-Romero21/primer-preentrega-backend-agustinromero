@@ -22,14 +22,14 @@ router.get('/', async (req,res)=> {
 
 
 router.post('/', async (req,res)=> {
-    const {id, product} = req.body
+    const {id, products} = req.body
     console.log(req.body)
     
-    if(!product) return res.send({status: 'error', error: 'el carrito no fue ingresado'})
+    if(!products) return res.send({status: 'error', error: 'el carrito no fue ingresado'})
     
     const response = await carts.addCart({
         id,
-        product
+        products
     })
 
     res.send({status: 'success', payload: response})
@@ -49,30 +49,17 @@ router.get('/:cid', async (req, res)=> {
 router.post('/:cid/product/:pid', async (req, res, next)=> {
   try{
     const {cid} = req.params
-    const{pid} = req.params
+    const {pid} = req.params
+    const {productID, quantity} = req.body
     
-    // if(!productID) return res.send({status: 'error', error: 'el carrito no fue ingresado'})
+    const response = await carts.addProductToCart(parseInt(cid), parseInt(pid),
+      {
+        productID: parseInt(pid),
+        quantity: 1
+      }
+    )
     
-    const response = await carts.addProductToCart(parseInt(cid), parseInt(pid))
-
     res.send({status: 'success', payload: response})
-
-
-
-
-
-
-    // const {cid} = req.params.cid
-    // const{pid} =req.params.pid
-
-    // const {productID, quantity} = req.body
-
-    // if (quantity > 1){
-    // const cart = await carts.addProductToCart(parseInt(cid), parseInt(pid))
-    // if (cart) return res.send(cart)
-    // } else {
-      
-    // }
 
   } catch(error){
     next(error)

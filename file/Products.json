@@ -214,14 +214,5 @@
 		"code": "00dkñn",
 		"stock": 324,
 		"id": 25
-	},
-	{
-		"title": "tit 3",
-		"description": "x ",
-		"price": 30,
-		"thumbnail": "../img/img0003.jpg",
-		"code": "a0003",
-		"stock": 300,
-		"id": 3
 	}
 ]

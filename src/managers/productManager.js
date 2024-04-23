@@ -3,21 +3,24 @@ import fs from 'fs'
 export default class ProductsManager{
     constructor(path){
         this.path = path
+        this.product = []
+        this.readFile()
     }
 
     readFile = async () => {
         try{
             const dataJson = await fs.promises.readFile(this.path, 'utf-8')
-            return JSON.parse(dataJson)
+            this.products = JSON.parse(dataJson)   
+            return this.products
         } catch (error){
-            return []
+            await fs.promises.readFile(this.path,JSON.stringify(this.products, null, '\t' ), 'utf-8')
         }
     }
     
 
     addProduct = async (product) => {
         try{
-            const productsDB = await this.readFile()
+            const productsDB = this.products
 
             //validar code
             const productFound = productsDB.find(prod => product.code === prod.code)
@@ -41,7 +44,7 @@ export default class ProductsManager{
     //-----------------------------------------------------------------------
     getProducts = async () => {
         try{
-            return await this.readFile()
+            return this.products
         } catch (error){
             console.log(error)
         }
@@ -49,7 +52,7 @@ export default class ProductsManager{
     //-----------------------------------------------------------------------
     getProductById = async (pid) => {
         try{
-            const productsDB = await this.readFile()
+            const productsDB = this.products
             const product = productsDB.find(prod => prod.id === pid)
 
             if (!product) return 'no esta el producto soilicitado'
@@ -61,17 +64,18 @@ export default class ProductsManager{
         }
     }
     //-----------------------------------------------------------------------
-    updateProduct = async (pid) => {
+    updateProduct = async (pid, productToUpDate) => {
         try{
-            const productsDB = await this.readFile()
+            const productsDB = this.products
             const product = productsDB.find(prod => prod.id === pid)
+            const productDate = productToUpDate
 
             if (!product) return 'no esta el producto soilicitado'
 
-            productsDB.push(product)
-            await fs.promises.appendFile(this.path, JSON.stringify(productsDB, {id: parseInt(uid), ...userToUpdate} , '\t'), 'utf-8') 
+            this.products.push(productDate)
+            await fs.promises.writeFile(this.path, JSON.stringify(this.products, {id: parseInt(pid), ...productDate} , '\t'), 'utf-8') 
             console.log("corregimos el elemento")
-            return console.log(product)
+            return console.log(productDate)
         } catch (error){
             return console.log(error)
         }
@@ -80,7 +84,7 @@ export default class ProductsManager{
     //-----------------------------------------------------------------------
     deleteProduct = async (pid) => {
         try{
-            const productsDB = await this.readFile()
+            const productsDB = this.products
             const product = productsDB.filter(prod => prod.id !== pid)
             
             console.log (product)
