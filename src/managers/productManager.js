@@ -67,15 +67,20 @@ export default class ProductsManager{
     updateProduct = async (pid, productToUpDate) => {
         try{
             const productsDB = this.products
-            const product = productsDB.find(prod => prod.id === pid)
-            const productDate = productToUpDate
+            let product = productsDB.find(prod => prod.id === pid)
+            const newProduct = {...productToUpDate, id: pid}
 
-            if (!product) return 'no esta el producto soilicitado'
-
-            this.products.push(productDate)
-            await fs.promises.writeFile(this.path, JSON.stringify(this.products, {id: parseInt(pid), ...productDate} , '\t'), 'utf-8') 
+            if (!product){
+                return 'no esta el producto soilicitado'
+                
+            } else {
+               product = newProduct
+               this.products.push(product)
+            }
+            
+            await fs.promises.writeFile(this.path, JSON.stringify(this.products, null, '\t'), 'utf-8') 
             console.log("corregimos el elemento")
-            return console.log(productDate)
+            return console.log(product)
         } catch (error){
             return console.log(error)
         }

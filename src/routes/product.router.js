@@ -53,26 +53,15 @@ router.get('/:pid', async (req, res)=> {
 
 router.put('/:pid', async (req, res)=> {
     const { pid } = req.params 
-    const {title, description, price, thumbnail, code, stock} = req.body
+    const productToUpDate = req.body
     console.log(req.body)
     
-    if(!title || !description || !price|| !code || !stock) return res.send({status: 'error', error: 'faltan campos por completar'})
-    
-    const response = await products.updateProduct(parseInt(pid), {
-        title,
-        description,
-        price,
-        thumbnail,
-        code,
-        stock
-    })
 
-    // const productIndex = products.updateProduct(parseInt(pid), productToUpdate)
-    // if (!productIndex) return res.status(404). send({status: 'error', error: 'user not found'})
 
-    // users[userIndex] = {id: parseInt(uid), ...userToUpdate}
+    const productIndex = products.updateProduct(parseInt(pid), productToUpDate)
+    if (!productIndex) return res.status(404). send({status: 'error', error: 'product not found'})
 
-    res.send({ststus: 'success', payload: response})
+    res.send({ststus: 'success', payload: productIndex})
     
 })
 
